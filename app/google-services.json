@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1042976867042",
+    "project_id": "uakd-c4",
+    "storage_bucket": "uakd-c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042976867042:android:6ae19e4e0a7c0a65e914bb",
+        "android_client_info": {
+          "package_name": "com.leancodeconsulting.uakd.c4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042976867042-2i2168oriv4oocdko0tvu6d1dm4gkt5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7O2L6LkyhM-YMHaUV_nuV1XRX0AyB9pM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042976867042-2i2168oriv4oocdko0tvu6d1dm4gkt5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042976867042:android:77a9012e05241a30e914bb",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042976867042-2i2168oriv4oocdko0tvu6d1dm4gkt5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7O2L6LkyhM-YMHaUV_nuV1XRX0AyB9pM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042976867042-2i2168oriv4oocdko0tvu6d1dm4gkt5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
