@@ -34,6 +34,7 @@
     <string name="err_enter_title">Please enter title</string>
     <string name="err_select_location">Please select location</string>
     <string name="add_new_reminder">Add a new reminder</string>
+    <string name="loginBtnLabel">LOGIN</string>
 
     <!-- Error strings -->
     <string name="geofence_unknown_error">Unknown error: the Geofence service is not available now.</string>

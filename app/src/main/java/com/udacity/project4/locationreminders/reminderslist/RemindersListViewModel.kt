@@ -9,10 +9,7 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.launch
 
-class RemindersListViewModel(
-    app: Application,
-    private val dataSource: ReminderDataSource
-) : BaseViewModel(app) {
+class RemindersListViewModel(app: Application, private val dataSource: ReminderDataSource) : BaseViewModel(app) {
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
 
@@ -42,8 +39,7 @@ class RemindersListViewModel(
                     })
                     remindersList.value = dataList
                 }
-                is Result.Error ->
-                    showSnackBar.value = result.message
+                is Result.Error -> showSnackBar.value = result.message!!
             }
 
             //check if no data has to be shown
