@@ -16,4 +16,8 @@ object AuthenticationController {
         }
     }
 
+    fun getCurrentUsername(): String {
+        return CurrentUserLiveData.value?.displayName?:""
+    }
+
 }
