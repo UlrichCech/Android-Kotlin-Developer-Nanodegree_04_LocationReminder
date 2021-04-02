@@ -5,6 +5,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 import java.util.*
+
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -60,7 +62,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
+            requireActivity()
+        )
         val mMapFragment = childFragmentManager.findFragmentById(R.id.locationMap) as SupportMapFragment
         mMapFragment.getMapAsync(this)
 
@@ -123,7 +127,25 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         setMapStyle(mMap)
         enableMyLocation()
 
+        mMap.setOnMarkerClickListener { marker: Marker ->
+            processGeocoding(marker)
+            true
+        }
         getDeviceLocation()
+    }
+
+    private fun processGeocoding(marker: Marker) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val availableAddresses = geocoder.getFromLocation(
+            marker.position?.latitude!!,
+            marker.position?.longitude!!,
+            1
+        )
+        //            val address: String = availableAddresses[0].getAddressLine(0)
+        val city: String = availableAddresses[0].locality
+        val country: String = availableAddresses[0].countryName
+        marker.title = "$city, $country"
+        marker.showInfoWindow()
     }
 
 
@@ -143,6 +165,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                     .snippet(snippet)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
             )
+            processGeocoding(currentMarker!!)
         }
     }
 
@@ -180,7 +203,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private fun isPermissionGranted() : Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     @SuppressLint("MissingPermission")
@@ -200,7 +224,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         // Check if location permissions are granted and if so enable the
         // location data layer.
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
@@ -225,15 +250,20 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         if (lastKnownLocation != null) {
                             mMap.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(
-                                LatLng(lastKnownLocation!!.latitude,
-                                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+                                    LatLng(
+                                        lastKnownLocation!!.latitude,
+                                        lastKnownLocation!!.longitude
+                                    ), DEFAULT_ZOOM.toFloat()
+                                )
+                            )
                         }
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")
                         Log.e(TAG, "Exception: %s", task.exception)
                         mMap.moveCamera(
                             CameraUpdateFactory
-                            .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
+                                .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat())
+                        )
 //                        mMap.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
