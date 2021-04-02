@@ -53,4 +53,10 @@ class RemindersListViewModel(app: Application, private val dataSource: ReminderD
     private fun invalidateShowNoData() {
         showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
     }
+
+    fun deleteAllReminders() {
+        viewModelScope.launch {
+            dataSource.deleteAllReminders()
+        }
+    }
 }
