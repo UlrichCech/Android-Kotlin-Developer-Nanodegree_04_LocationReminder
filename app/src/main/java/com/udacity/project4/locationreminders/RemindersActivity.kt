@@ -3,9 +3,12 @@ package com.udacity.project4.locationreminders
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +20,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
+import com.udacity.project4.BuildConfig
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.reminderslist.ReminderListFragment
 import kotlinx.android.synthetic.main.activity_reminders.*
@@ -98,16 +102,14 @@ class RemindersActivity : AppCompatActivity() {
                         PackageManager.PERMISSION_DENIED)) {
             Snackbar
                     .make(remindersActivityLayout, R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
-//                .setAction(R.string.settings) {
-//                    startActivity(Intent().apply {
-//                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                    })
-//                }
+                    .setAction(R.string.settings) {
+                        startActivity(Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                    }
                     .show()
-//        } else {
-//            checkDeviceLocationSettingsAndStartGeofence()
         }
     }
 
@@ -136,15 +138,11 @@ class RemindersActivity : AppCompatActivity() {
                 }.show()
             }
         }
-        locationSettingsResponseTask.addOnCompleteListener {
-            if ( it.isSuccessful ) {
-                addGeofenceForReminders()
-            }
-        }
-    }
-
-    private fun addGeofenceForReminders() {
-        // TODO: implement this
+//        locationSettingsResponseTask.addOnCompleteListener {
+//            if ( it.isSuccessful ) {
+//                addGeofenceForReminders()
+//            }
+//        }
     }
 
 }

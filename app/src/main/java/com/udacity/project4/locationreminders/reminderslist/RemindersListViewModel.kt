@@ -3,6 +3,7 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.Geofence
 import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
@@ -10,8 +11,13 @@ import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(app: Application, private val dataSource: ReminderDataSource) : BaseViewModel(app) {
+
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
+
+    val geofenceList = java.util.ArrayList<Geofence>()
+
+
 
     /**
      * Get all the reminders from the DataSource and add them to the remindersList to be shown on the UI,
@@ -47,11 +53,16 @@ class RemindersListViewModel(app: Application, private val dataSource: ReminderD
         }
     }
 
+    fun isReminderListEmpty(): Boolean {
+        return remindersList.value == null || remindersList.value!!.isEmpty()
+    }
+
+
     /**
      * Inform the user that there's not any data if the remindersList is empty
      */
     private fun invalidateShowNoData() {
-        showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
+        showNoData.value = isReminderListEmpty()
     }
 
     fun deleteAllReminders() {
@@ -59,4 +70,5 @@ class RemindersListViewModel(app: Application, private val dataSource: ReminderD
             dataSource.deleteAllReminders()
         }
     }
+
 }
