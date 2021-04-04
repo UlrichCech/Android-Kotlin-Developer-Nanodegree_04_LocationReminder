@@ -32,7 +32,7 @@ class RemindersActivity : AppCompatActivity() {
 
     private val androidRuntimeQorLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
 
-    private lateinit var remindersActivityLayout: ConstraintLayout;
+    private lateinit var remindersActivityLayout: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

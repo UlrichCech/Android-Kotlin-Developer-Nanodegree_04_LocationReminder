@@ -44,7 +44,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
-    private var cameraPosition: CameraPosition? = null
     private var currentMarker: Marker? = null
     private val defaultLocation = LatLng(53.628839, 9.995869)
     private var lastKnownLocation: Location? = null
@@ -53,6 +52,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+//        TODO: add the map setup implementation (DONE)
+//        TODO: zoom to the user location after taking his permission (DONE)
+//        TODO: add style to the map (DONE)
+//        TODO: put a marker to location that the user selected (DONE)
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_select_location, container, false)
 
@@ -68,13 +71,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         val mMapFragment = childFragmentManager.findFragmentById(R.id.locationMap) as SupportMapFragment
         mMapFragment.getMapAsync(this)
 
-//        TODO: add the map setup implementation (DONE)
-//        TODO: zoom to the user location after taking his permission (DONE)
-//        TODO: add style to the map (DONE)
-//        TODO: put a marker to location that the user selected (DONE)
-
         binding.saveLocationBtn.setOnClickListener {
-//        TODO: call this function after the user confirms on the selected location
+//        TODO: call this function after the user confirms on the selected location (DONE)
             onLocationSelected()
         }
 
@@ -82,9 +80,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun onLocationSelected() {
-        //        TODO: When the user confirms on the selected location,
-        //         send back the selected location details to the view model
-        //         and navigate back to the previous fragment to save the reminder and add the geofence
+        //        TODO: When the user confirms on the selected location, (DONE)
+        //         send back the selected location details to the view model (DONE)
+        //         and navigate back to the previous fragment to save the reminder and add the geofence (DONE)
         binding.viewModel?.latitude?.postValue(currentMarker?.position?.latitude)
         binding.viewModel?.longitude?.postValue(currentMarker?.position?.longitude)
         binding.viewModel?.reminderSelectedLocationStr?.postValue(currentMarker?.title)
@@ -119,8 +117,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true;
-        mMap.uiSettings.isCompassEnabled = true;
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isCompassEnabled = true
 
         setMapLongClick(mMap)
         setPoiClick(mMap)
@@ -210,12 +208,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (isPermissionGranted()) {
-            mMap.setMyLocationEnabled(true)
+            mMap.isMyLocationEnabled = true
         }
         else {
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
         }

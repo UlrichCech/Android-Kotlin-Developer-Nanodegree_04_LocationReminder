@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-            <!--TODO: Add the map fragment for the user to select the location-->
+            <!--TODO: Add the map fragment for the user to select the location (DONE)-->
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/locationMap"

@@ -1,7 +1,6 @@
 package com.udacity.project4.locationreminders.reminderslist
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +10,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.setFragmentResultListener
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -46,7 +46,6 @@ class ReminderListFragment : BaseFragment() {
     private lateinit var binding: FragmentRemindersBinding
 
 
-    private val androidRuntimeQorLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
     //use Koin to retrieve the ViewModel instance
     override val _viewModel: RemindersListViewModel by viewModel()
 
@@ -58,6 +57,17 @@ class ReminderListFragment : BaseFragment() {
     }
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFragmentResultListener("KEY-NEW_REMINDER") { requestKey, bundle ->
+            val result = bundle.getString("newReminderId")
+            Log.i(TAG, result?:"")
+            // Do something with the result
+        }
+        _viewModel.remindersList.observe(requireActivity(), {
+            createGeofencesForReminders(it)
+        })
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -69,6 +79,7 @@ class ReminderListFragment : BaseFragment() {
                 R.layout.fragment_reminders, container, false
             )
         binding.viewModel = _viewModel
+//        binding.viewModel!!.deleteAllReminders()
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
@@ -87,15 +98,12 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
-        binding.viewModel!!.remindersList.observe(viewLifecycleOwner, {
-            createGeofencesForReminders(it)
-        })
     }
 
     override fun onResume() {
         super.onResume()
         //load the reminders list on the ui
-        binding.viewModel?.loadReminders()
+        binding.viewModel!!.loadReminders()
     }
 
     private fun navigateToAddReminder() {
@@ -131,9 +139,9 @@ class ReminderListFragment : BaseFragment() {
     }
 
 
-    fun createGeofencesForReminders(list: List<ReminderDataItem>) {
+    fun createGeofencesForReminders(reminderList: List<ReminderDataItem>) {
         if (! binding.viewModel!!.isReminderListEmpty()) {
-            for (reminder in binding.viewModel!!.remindersList.value!!) {
+            for (reminder in reminderList) {
                 createGeofence(reminder)
             }
             if (ActivityCompat.checkSelfPermission(
@@ -150,17 +158,27 @@ class ReminderListFragment : BaseFragment() {
                 // for ActivityCompat#requestPermissions for more details.
                 return
             }
-            geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent).run {
-                addOnSuccessListener {
-                    Toast.makeText(requireContext(), R.string.geofences_added,
-                            Toast.LENGTH_SHORT).show()
-                }
-                addOnFailureListener {
-                    Log.e(TAG, it.message!!)
-                    Toast.makeText(requireContext(), R.string.geofences_not_added,
-                            Toast.LENGTH_SHORT).show()
+            geofencingClient.removeGeofences(geofencePendingIntent).run {
+                addOnCompleteListener {
+                    geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)
+                        .run {
+                            addOnSuccessListener {
+                                Toast.makeText(
+                                    requireContext(), R.string.geofences_added,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            addOnFailureListener {
+                                Log.e(TAG, it.message!!)
+                                Toast.makeText(
+                                    requireContext(), R.string.geofences_not_added,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                 }
             }
+
         }
     }
 
@@ -174,7 +192,7 @@ class ReminderListFragment : BaseFragment() {
                         reminder.longitude!!,
                         GEOFENCE_RADIUS_IN_METERS
                     )
-                    .setExpirationDuration(Long.MAX_VALUE)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                     .build()
             )
@@ -195,43 +213,6 @@ class ReminderListFragment : BaseFragment() {
             setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
             addGeofences(binding.viewModel!!.geofenceList)
         }.build()
-    }
-
-
-    @TargetApi(29)
-    private fun checkLocationPermissionsGranted(): Boolean {
-        val fineLocationGranted = (
-                PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ))
-        val backgroundLocationGranted =
-            if (androidRuntimeQorLater) {
-                PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(
-                            requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                        )
-            } else {
-                true
-            }
-        return fineLocationGranted && backgroundLocationGranted
-    }
-
-
-    fun removeAllGeofences() {
-        if (!checkLocationPermissionsGranted()) {
-            return
-        }
-        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
-            addOnSuccessListener {
-                Log.d(TAG, getString(R.string.geofences_removed))
-                Toast.makeText(requireContext(), R.string.geofences_removed, Toast.LENGTH_SHORT)
-                    .show()
-            }
-            addOnFailureListener {
-                Log.d(TAG, getString(R.string.geofences_not_removed))
-            }
-        }
     }
 
 }

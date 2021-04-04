@@ -1,14 +1,11 @@
 package com.udacity.project4.authentication
 
 import android.app.Activity
-import android.app.ActivityManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +27,7 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        AuthenticationController.authenticationState.observe(this, Observer { authenticationState ->
+        AuthenticationController.authenticationState.observe(this, { authenticationState ->
             when (authenticationState) {
                 AuthenticationController.AuthenticationState.AUTHENTICATED -> {
                     Log.i(TAG, "User <${AuthenticationController.getCurrentUsername()}> was successfully logged in.")

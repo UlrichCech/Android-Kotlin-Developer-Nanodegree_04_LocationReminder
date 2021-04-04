@@ -9,7 +9,6 @@ import com.google.android.gms.location.GeofencingEvent
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
-import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.sendNotification
 import kotlinx.coroutines.*
@@ -26,7 +25,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         private const val TAG = "GeofenceTransitionsJob"
         private const val JOB_ID = 573
 
-        // TODO: call this to start the JobIntentService to handle the geofencing transition events
+        // TODO: call this to start the JobIntentService to handle the geofencing transition events (DONE)
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(
                 context,
@@ -37,9 +36,9 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     }
 
     override fun onHandleWork(intent: Intent) {
-        //TODO: handle the geofencing transition events and
-        // send a notification to the user when he enters the geofence area
-        //TODO call @sendNotification
+        //TODO: handle the geofencing transition events and (DONE)
+        // send a notification to the user when he enters the geofence area (DONE)
+        //TODO call @sendNotification (DONE)
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         // Test that the reported transition was of interest.
