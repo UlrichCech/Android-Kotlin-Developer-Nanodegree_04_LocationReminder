@@ -1,8 +1,11 @@
 package com.udacity.project4.authentication
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 
 object AuthenticationController {
+
+    val inLogoutState = MutableLiveData<Boolean>()
 
     enum class AuthenticationState {
         AUTHENTICATED, UNAUTHENTICATED

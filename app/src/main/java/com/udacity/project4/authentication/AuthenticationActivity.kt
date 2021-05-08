@@ -30,8 +30,15 @@ class AuthenticationActivity : AppCompatActivity() {
         AuthenticationController.authenticationState.observe(this, { authenticationState ->
             when (authenticationState) {
                 AuthenticationController.AuthenticationState.AUTHENTICATED -> {
-                    Log.i(TAG, "User <${AuthenticationController.getCurrentUsername()}> was successfully logged in.")
-                    navigateToRemindersList()
+                    if (AuthenticationController.inLogoutState.value == null  || AuthenticationController.inLogoutState.value == false) {
+                        Log.i(
+                            TAG,
+                            "User <${AuthenticationController.getCurrentUsername()}> was successfully logged in."
+                        )
+                        navigateToRemindersList()
+                    } else {
+                        AuthenticationController.inLogoutState.value = false
+                    }
                 }
                 AuthenticationController.AuthenticationState.UNAUTHENTICATED -> {
                     Log.i(TAG, "User logged out successfully!")

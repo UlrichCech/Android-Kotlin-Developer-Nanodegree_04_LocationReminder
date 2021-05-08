@@ -10,13 +10,14 @@ import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.setFragmentResultListener
+//import androidx.fragment.app.setFragmentResultListener
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.udacity.project4.R
+import com.udacity.project4.authentication.AuthenticationController
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
@@ -59,11 +60,6 @@ class ReminderListFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener("KEY-NEW_REMINDER") { requestKey, bundle ->
-            val result = bundle.getString("newReminderId")
-            Log.i(TAG, result?:"")
-            // Do something with the result
-        }
         _viewModel.remindersList.observe(requireActivity(), {
             createGeofencesForReminders(it)
         })
@@ -79,7 +75,6 @@ class ReminderListFragment : BaseFragment() {
                 R.layout.fragment_reminders, container, false
             )
         binding.viewModel = _viewModel
-//        binding.viewModel!!.deleteAllReminders()
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(false)
         setTitle(getString(R.string.app_name))
@@ -126,6 +121,7 @@ class ReminderListFragment : BaseFragment() {
         when (item.itemId) {
             R.id.logout -> {
                 AuthUI.getInstance().signOut(requireContext())
+                AuthenticationController.inLogoutState.value = true
                 requireActivity().finish()
             }
         }

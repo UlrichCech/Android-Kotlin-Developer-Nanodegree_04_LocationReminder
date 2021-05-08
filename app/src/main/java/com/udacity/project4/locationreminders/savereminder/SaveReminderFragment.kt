@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.setFragmentResult
+//import androidx.fragment.app.setFragmentResult
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -47,7 +47,7 @@ class SaveReminderFragment : BaseFragment() {
             val newReminder = ReminderDataItem(_viewModel.reminderTitle.value, _viewModel.reminderDescription.value,
                 _viewModel.reminderSelectedLocationStr.value, _viewModel.latitude.value, _viewModel.longitude.value)
             binding.viewModel?.validateAndSaveReminder(newReminder)
-            setFragmentResult("KEY-NEW_REMINDER", bundleOf("newReminderId" to newReminder.id))
+//            setFragmentResult("KEY-NEW_REMINDER", bundleOf("newReminderId" to newReminder.id))
         }
     }
 
