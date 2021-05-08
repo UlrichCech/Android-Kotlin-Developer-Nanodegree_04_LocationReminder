@@ -37,7 +37,7 @@ class AuthenticationActivity : AppCompatActivity() {
                         )
                         navigateToRemindersList()
                     } else {
-                        AuthenticationController.inLogoutState.value = false
+                        AuthenticationController.inLogoutState.postValue(false)
                     }
                 }
                 AuthenticationController.AuthenticationState.UNAUTHENTICATED -> {
